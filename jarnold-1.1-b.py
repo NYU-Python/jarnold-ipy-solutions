@@ -8,28 +8,20 @@ tickers = ['AAPL', 'FB', 'GOOG', 'LNKD', 'MSFT']
 summaries = ['centered', 'average', 'max', 'min', 'median']
 set = []
 	
-def populate(set):
-	start = 0
-	end = 251
-	while start <= end:
-		set.append(str(start))
-		start += 1
-	return set
 
 def stock_price_summary(myinput):
-	type = myinput[0]
-	days = int(myinput[1])
-	ticker = myinput[2]
+	type, days, ticker = myinput
+	prices = get_data(ticker, days)
 	if type == "centered":
-		print get_centered(get_data(ticker, days))
+		print get_centered(prices)
 	if type == "max":
-		print max_price(get_data(ticker, days))
+		print max_price(prices)
 	if type == "min":
-		print min_price(get_data(ticker, days))
+		print min_price(prices)
 	if type == "average":
-		print simple(get_data(ticker, days))
+		print simple(prices)
 	if type == "median":
-		print get_median(get_data(ticker, days))
+		print get_median(prices)
 
 def get_data(ticker, days):
 	prices = []
@@ -51,13 +43,11 @@ def get_data(ticker, days):
 	return prices
 
 def max_price(prices):
-	prices.sort()
-	max = prices.pop()
+	max = prices.max()
 	return max
 	
 def min_price(prices):
-	prices.sort(reverse=True)
-	min = prices.pop()
+	min = prices.max()
 	return min
 	
 def average(first, second):
@@ -86,26 +76,24 @@ def get_centered(prices):
 	prices = list(prices)
 	return get_median(prices)	
 	
-def valid():
+def valid(myset):
 	while True:
 		myinput = raw_input("Please type in a summary type, a number of days, and a ticker name: ")
 		myinput = myinput.split()
 		print myinput
 		if len(myinput) == 3:
-			type = myinput[0]
-			days = myinput[1]
-			ticker = myinput[2]
-			if (str(type) in summaries and 
-				str(days) in set and 
-				str(ticker) in tickers):
+			type, days, ticker = myinput
+			if (type in summaries and 
+				days in myset and 
+				ticker in tickers):
 				break
-			if str(type) not in summaries:
+			if type not in summaries:
 				print ("I don't understand that summary type. Please type 'centered', 'average', 'max', 'min', or 'median'.")
 				continue
-			if str(days) not in set:
+			if days not in myset:
 				print ("Sorry! Your number of days must be an integer equal to or less than 251.")
 				continue
-			if str(ticker) not in tickers:
+			if ticker not in tickers:
 				print ("I don't understand that ticker name. Please type 'AAPL', 'FB', 'GOOG', 'LNKD', or 'MSFT'.")
 				continue
 			else:
@@ -114,10 +102,10 @@ def valid():
 			continue
 	return myinput	
 
-def initialize():
-	populate(set)
-	myinput = valid()
+def main():
+	myset = [ str(x) for x in range(252) ]
+	myinput = valid(myset)
 	stock_price_summary(myinput)
 	
 	
-initialize()
+main()
