@@ -2,21 +2,13 @@
 
 import sys
 
-	
-def populate(set):
-	start = 0
-	end = 100
-	while start <= end:
-		set.append(start)
-		start += 1
-	return set
-	
+
 def guess(number, answer, set):
-	if len(set) == 1:
+	if max(set) - min(set) <= 1:
 		print ("You changed your number! No fair :( ")
 		sys.exit(0)
 	else:
-		number = int(number) - set[0]
+		number = number - set[0]
 		if answer == "higher":
 			new_set = set[number+1:]
 		if answer == "lower":
@@ -47,14 +39,13 @@ def highorlow(number):
 		
 		
 def new_guess(set):
+	print set
 	if len(set) % 2 == 0:
 		middle = len(set)/2
-		adjusted = middle
-		new_guess = set[adjusted-1]
+		new_guess = set[middle]
 	if len(set) % 2 != 0:
 		middle = (len(set)+1)/2
-		adjusted = middle-1
-		new_guess = set[adjusted]
+		new_guess = set[middle-1]
 	return new_guess
 			
 			
@@ -71,9 +62,8 @@ def number_guesser(set, number):
 	
 def initialize():
 	print("Let's play! Pick a number between 1 and 100 and I'll see if I can guess it.")
-	set = []
+	set = range(100)
 	number = 50
-	populate(set)
 	number_guesser(set, number)
 	
 	
