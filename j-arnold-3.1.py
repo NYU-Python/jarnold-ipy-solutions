@@ -11,6 +11,7 @@ def getArgs():
 	parser.add_argument('directory', action='store', help='give location of desired directory')
 	parser.add_argument('direction', action='store', help='give sort criteria for directory', choices=['ascending', 'descending'])
 	parser.add_argument('criteria', action='store', help='give sort direction of directory', choices=['size', 'mtime', 'name'])
+	parser.add_argument('num', action='store', help='select the number of results you would like to see', type=int, default=5)
 	return parser.parse_args()
 
 
@@ -32,11 +33,20 @@ def build_dict(mydir):
 
 
 # Getting results based on criteria and direction	
-def getresults(mydict, crit, direction):
+def getresults(mydict, crit, direction, num):
 	if direction == "ascending":
-		print sorted(mydict, key=lambda x:mydict[x][crit])
+		my_results = sorted(mydict, key=lambda x:mydict[x][crit])
 	if direction == "descending":
-		print sorted(mydict, key=lambda x:mydict[x][crit], reverse=True)
+		my_results = sorted(mydict, key=lambda x:mydict[x][crit], reverse=True)
+	format_results(mydict, my_results[0:num])
+
+# Formatting the results
+def format_results(mydict, my_results):
+	for item in my_results:
+		innerdict = mydict[item]
+		if innerdict:
+			print item + '\tsize: ' + str(innerdict['size']) + '\tlast modified :' + str(innerdict['mtime'])
+
 
 
 def main():
@@ -44,8 +54,9 @@ def main():
 	mydir = argvals.directory
 	direction = argvals.direction
 	crit = argvals.criteria
+	num = argvals.num
 	mydict = build_dict(mydir)
-	getresults(mydict, crit, direction)
+	getresults(mydict, crit, direction, num)
 		
 
 main()
